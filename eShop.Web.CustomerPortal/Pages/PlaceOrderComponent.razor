@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IViewShoppingCartUseCase viewShoppingCartUseCase
 @inject IPlaceOrderUseCase placeOrderUseCase 
+@inject Microsoft.Extensions.Logging.ILoggerFactory loggerFactory
 
 <MessageComponent @ref="msgComponent"></MessageComponent>
 
@@ -41,7 +42,7 @@
 
     private async void HandleCustomerInfoSubmitted(CustomerViewModel customer)
     {
-        var mapper = new AutoMapper.MapperConfiguration(cfg => cfg.CreateMap<CustomerViewModel, Order>()).CreateMapper();
+        var mapper = new AutoMapper.MapperConfiguration(cfg => cfg.CreateMap<CustomerViewModel, Order>(), loggerFactory).CreateMapper();
         mapper.Map<CustomerViewModel, Order>(customer, order);
 
         var orderUniqueId = await placeOrderUseCase.Execute(order);

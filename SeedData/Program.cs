@@ -9,7 +9,7 @@ namespace SeedData
     {
         static void Main(string[] args)
         {
-            var da = new DataAccess("Data Source=(local);Initial Catalog=eShop;Integrated Security=True");
+            var da = new DataAccess("Data Source=(local);Initial Catalog=eShop;Integrated Security=True;Encrypt=True;TrustServerCertificate=True");
             var sql = "INSERT INTO Product VALUES(@ProductId, @Brand, @Name, @Price, @ImageLink, @Description)";
 
             var products = new List<Product>
