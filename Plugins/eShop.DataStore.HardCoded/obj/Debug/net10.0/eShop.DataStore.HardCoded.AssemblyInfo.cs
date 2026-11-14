@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("eShop.DataStore.HardCoded")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28cbe95c2d207c3d2908a255b0ab1118d2732082")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3ab8b7548cfbe2955613f351879706358564025")]
 [assembly: System.Reflection.AssemblyProductAttribute("eShop.DataStore.HardCoded")]
 [assembly: System.Reflection.AssemblyTitleAttribute("eShop.DataStore.HardCoded")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
