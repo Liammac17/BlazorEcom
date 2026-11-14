@@ -1,0 +1,5 @@
+C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\wwwroot\styles.css
+C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\wwwroot\exampleJsInterop.js
+wwwroot\background.png
+wwwroot\exampleJsInterop.js
+wwwroot\styles.css

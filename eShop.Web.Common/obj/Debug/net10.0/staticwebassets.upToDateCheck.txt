@@ -1,0 +1,5 @@
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\wwwroot\styles.css
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\wwwroot\jsNavigator.js
+wwwroot\background.png
+wwwroot\jsNavigator.js
+wwwroot\styles.css

@@ -1,0 +1,5 @@
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.AdminPortal\wwwroot\exampleJsInterop.js
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.AdminPortal\wwwroot\styles.css
+wwwroot\background.png
+wwwroot\exampleJsInterop.js
+wwwroot\styles.css

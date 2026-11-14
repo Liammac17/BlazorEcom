@@ -1,0 +1,14 @@
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\bin\Debug\net10.0\eShop.CoreBusiness.deps.json
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\bin\Debug\net10.0\eShop.CoreBusiness.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\bin\Debug\net10.0\eShop.CoreBusiness.pdb
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.csproj.AssemblyReference.cache
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.AssemblyInfoInputs.cache
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.AssemblyInfo.cs
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.csproj.CoreCompileInputs.cache
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.sourcelink.json
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\refint\eShop.CoreBusiness.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.CoreBusiness.pdb
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\ref\eShop.CoreBusiness.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.CoreBusiness\obj\Debug\net10.0\eShop.Co.C42D104F.Up2Date
