@@ -1,65 +1,28 @@
-﻿@inject IDeleteProductUseCase deleteProductUseCase
-@inject IUpdateQuantityUseCase updateQuantityUseCase 
+@inject IDeleteProductUseCase DeleteProductUseCase
+@inject IUpdateQuantityUseCase UpdateQuantityUseCase
+@inject Microsoft.Extensions.Logging.ILogger<LineItemComponent> Logger
 
-<MessageComponent @ref="messageComponent"></MessageComponent>
-
-@if (LineItem != null && LineItem.Product != null)
+@if (LineItem != null)
 {
-    <li class="row">
-        <div class="col">
-            <img src="@LineItem.Product.ImageLink" />
-        </div>
-        <div class="col">
-            <h5>@LineItem.Product.Name</h5>
-            <div>
-                Quantity:&nbsp;&nbsp;
-                <input type="number" min="0" value="@LineItem.Quantity" @onchange="HandleQuantityChange" />
-            </div>
-            <div class="mt-2">                
-                 Price:&nbsp;&nbsp;@LineItem.Product.Price.ToString("c")                
-            </div>
-        </div>
-        <div class="col">
-            <button class="btn btn-light" @onclick="@(() => DeleteProduct(LineItem.ProductId))">Delete</button>
-        </div>
-    </li>
+    <article class="bag-item"><a class="bag-item-image" href="@($"/product/{LineItem.ProductId}")"><img src="@(LineItem.Product?.ImageLink ?? "/images/product-placeholder.svg")" alt="@(LineItem.Product?.Name ?? "Unavailable product")" onerror="this.onerror=null;this.src='/images/product-placeholder.svg'" /></a><div class="bag-item-copy"><span class="eyebrow">@(LineItem.Product?.Brand ?? "MyShop")</span><h2><a href="@($"/product/{LineItem.ProductId}")">@(LineItem.Product?.Name ?? "Unavailable product")</a></h2><span class="bag-unit-price">@LineItem.Price.ToString("C2") each</span><div class="quantity-controls"><label for="@($"quantity-{LineItem.ProductId}")">Quantity</label><input id="@($"quantity-{LineItem.ProductId}")" class="quantity-input" type="number" min="0" max="99" @bind="quantity" @bind:after="ChangeQuantity" disabled="@busy" /><button type="button" class="text-button remove-button" disabled="@busy" @onclick="Remove">Remove</button></div>@if (error != null) { <p class="field-error" role="alert">@error</p> }</div><strong class="bag-line-total">@((LineItem.Price * LineItem.Quantity).ToString("C2"))</strong></article>
 }
 
 @code {
-
-    [Parameter]
-    public OrderLineItem LineItem { get; set; }
-
-    [Parameter]
-    public EventCallback<Order> OnDeleteProduct { get; set; }
-
-    [Parameter]
-    public EventCallback<Order> OnUpdateQuantity { get; set; }
-
-    MessageComponent messageComponent;
-
-    private async void DeleteProduct(int productId)
+    [Parameter] public OrderLineItem LineItem { get; set; }
+    [Parameter] public EventCallback<Order> OnDeleteProduct { get; set; }
+    [Parameter] public EventCallback<Order> OnUpdateQuantity { get; set; }
+    private int quantity;
+    private bool busy;
+    private string error;
+    protected override void OnParametersSet() { if (!busy) quantity = LineItem?.Quantity ?? 0; }
+    private async Task Remove() { if (busy) return; busy = true; try { error = null; await OnDeleteProduct.InvokeAsync(await DeleteProductUseCase.Execute(LineItem.ProductId)); } catch (Exception ex) { Logger.LogWarning(ex, "Unable to remove product"); error = "We couldn't remove this item. Please try again."; } finally { busy = false; } }
+    private async Task ChangeQuantity()
     {
-        var order = await deleteProductUseCase.Execute(productId);
-        await OnDeleteProduct.InvokeAsync(order);
+        if (busy) return;
+        if (quantity < 0 || quantity > 99) { quantity = LineItem.Quantity; error = "Choose a quantity between 0 and 99."; return; }
+        busy = true;
+        try { error = null; await OnUpdateQuantity.InvokeAsync(await UpdateQuantityUseCase.Execute(LineItem.ProductId, quantity)); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Unable to update quantity"); quantity = LineItem.Quantity; error = "We couldn't update the quantity. Please try again."; }
+        finally { busy = false; }
     }
-
-    private async void HandleQuantityChange(ChangeEventArgs e)
-    {
-        if (string.IsNullOrWhiteSpace(e.Value.ToString())) return;
-        int qty = 0;
-        if (int.TryParse(e.Value.ToString(), out qty))
-        {
-            if (qty < 0)
-            {
-                messageComponent.ShowError("Quantity of a line item cannot be less than zero.");
-                return;
-            }
-
-            var order = await updateQuantityUseCase.Execute(LineItem.ProductId, qty);
-            await OnUpdateQuantity.InvokeAsync(order);
-        }
-
-    }
-
 }

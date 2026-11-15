@@ -1,21 +1,43 @@
-﻿@page "/processedorders"
-
+@page "/processedorders"
+@attribute [Authorize(Policy = "Admin")]
 @inject IViewProcessedOrdersUseCase viewProcessedOrdersUseCase
+@inject Microsoft.Extensions.Logging.ILogger<ProcessedOrdersComponent> logger
 
-@attribute [Authorize]
+<PageTitle>Processed orders · MyShop</PageTitle>
+<section class="page-container inner-page">
+<header class="page-heading">
+    <div><h1>Processed orders</h1></div>
+    <span class="status-badge status-complete">@orders.Count processed</span>
+</header>
+<nav class="admin-tabs" aria-label="Order status">
+    <NavLink href="/outstandingorders">Pending</NavLink>
+    <NavLink href="/processedorders" Match="NavLinkMatch.All">Processed</NavLink>
+</nav>
+@if (error != null)
+{
+    <div class="notice notice-error" role="alert"><span>@error</span><button class="btn btn-outline" @onclick="LoadOrders">Try again</button></div>
+}
+else
+{
+    <OrderListComponent Orders="orders" EmptyTitle="No processed orders" EmptyMessage="" />
+}
 
-<h3>Processed Orders</h3>
-<br />
-<OrderListComponent Orders="orders"></OrderListComponent>
-
+</section>
 
 @code {
-    private IEnumerable<Order> orders;
+    private List<Order> orders = new List<Order>();
+    private string error;
 
-    protected override void OnInitialized()
+    protected override void OnInitialized() => LoadOrders();
+
+    private void LoadOrders()
     {
-        base.OnInitialized();
-
-        orders = viewProcessedOrdersUseCase.Execute();
+        error = null;
+        try { orders = viewProcessedOrdersUseCase.Execute().ToList(); }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Unable to load processed orders.");
+            error = "Could not load orders.";
+        }
     }
 }

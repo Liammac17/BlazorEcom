@@ -11,6 +11,7 @@ namespace eShop.UseCases.PluginInterfaces.DataStore
         Order GetOrderByUniqueId(string uniqueId);
         int CreateOrder(Order order);
         void UpdateOrder(Order order);
+        bool TryProcessOrder(int orderId, string adminUserName, DateTime processedAt);
         IEnumerable<Order> GetOrders();
         IEnumerable<Order> GetOutstandingOrders();
         IEnumerable<Order> GetProcessedOrders();

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("eShop.ShoppingCart.LocalStorage")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28cbe95c2d207c3d2908a255b0ab1118d2732082")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de6d8900ae9a7e738b4b7a720f2b7a02910a81df")]
 [assembly: System.Reflection.AssemblyProductAttribute("eShop.ShoppingCart.LocalStorage")]
 [assembly: System.Reflection.AssemblyTitleAttribute("eShop.ShoppingCart.LocalStorage")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

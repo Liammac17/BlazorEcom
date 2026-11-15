@@ -1,36 +1,25 @@
-﻿<div class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <ul class="navbar-nav w-100">
-        <li class="nav-item">
-            <a class="navbar-brand" href="">eShop</a>
-        </li>
-        <AuthorizeView>
-            <Authorized>
-                <li class="nav-item">
-                    <a class="nav-link" href="outstandingorders">Outstanding Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="processedorders">Processed Orders</a>
-                </li>                
-            </Authorized>
-        </AuthorizeView>        
-        <li class="nav-item ml-auto">
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink class="nav-link" href="/logout">
-                        Sign out
-                    </NavLink>
-                </Authorized>
-                <NotAuthorized>
-                    <NavLink class="nav-link" href="cart">
-                        <CartComponent></CartComponent>
-                    </NavLink>
-                </NotAuthorized>
+@inject NavigationManager Navigation
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="/" aria-label="MyShop home">My<span>Shop</span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <NavLink href="/products" Match="NavLinkMatch.Prefix">Shop</NavLink>
+            <AuthorizeView Policy="Admin">
+                <Authorized><NavLink href="/outstandingorders">Orders</NavLink></Authorized>
             </AuthorizeView>
-        </li>
-    </ul>
-</div>
+        </nav>
+        <div class="header-actions">
+            <AuthorizeView Policy="Admin">
+                <Authorized><button class="text-button account-link" @onclick="SignOut">Sign out</button></Authorized>
+                <NotAuthorized><button class="text-button account-link" @onclick="SignIn">Admin</button></NotAuthorized>
+            </AuthorizeView>
+            <NavLink class="cart-link" href="/cart" aria-label="View shopping bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg><CartComponent /></NavLink>
+        </div>
+    </div>
+</header>
 
 @code {
-
-
+    private void SignIn() => Navigation.NavigateTo("/login", true);
+    private void SignOut() => Navigation.NavigateTo("/logout", true);
 }

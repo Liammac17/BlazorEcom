@@ -1,63 +1,26 @@
-﻿@page "/orderconfirm/{uid}"
+<PageTitle>Order confirmation · MyShop</PageTitle>
+@page "/orderconfirm/{uid}"
+@inject IViewOrderConfirmationUseCase ViewConfirmation
+@inject Microsoft.Extensions.Logging.ILogger<OrderConfirmationComponent> Logger
 
-@inject IViewOrderConfirmationUseCase viewOrderConfirmationUseCase
-
-<h3>Your Order is Placed</h3>
-<br />
-@if (order != null)
-{
-    <p>
-        <b>Shipping Info:</b>
-    </p>
-    <p>@order.CustomerName</p>
-    <p>@order.CustomerAddress</p>
-    <p>@order.CustomerCity</p>
-    <p>@order.CustomerStateProvince</p>
-    <p>@order.CustomerCountry</p>
-    <br />
-    <OrderSummaryComponent Order="order" HidePlaceOrderButton="true"></OrderSummaryComponent>
-
-    <br />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in order.LineItems)
-            {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.Product.Price</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+<section class="page-container inner-page">
+@if (order == null) { <div class="empty-state"><h1>Order not found.</h1><p>@(error ?? "Check the confirmation link and try again.")</p><a class="btn btn-primary" href="/products">Shop products</a></div> }
+else {
+    <div class="confirmation-heading"><span class="confirmation-check" aria-hidden="true">✓</span><h1>Order placed.</h1><span class="order-reference">ORDER #@order.OrderId · @order.DatePlaced?.ToString("dd MMM yyyy")</span></div>
+    <div class="confirmation-layout"><div><section class="address-block"><span class="eyebrow">Shipping address</span><h2>@order.CustomerName</h2><p>@order.CustomerAddress<br />@order.CustomerCity, @order.CustomerStateProvince<br />@order.CustomerCountry</p></section>
+    <div class="confirmation-items">@foreach (var item in order.LineItems) { <article class="confirmation-item"><img src="@(item.Product?.ImageLink ?? "/images/product-placeholder.svg")" alt="@(item.Product?.Name ?? "Ordered product")" onerror="this.onerror=null;this.src='/images/product-placeholder.svg'" /><div><span class="eyebrow">@(item.Product?.Brand ?? "MyShop")</span><h3>@(item.Product?.Name ?? $"Product #{item.ProductId}")</h3><p>Quantity @item.Quantity · @item.Price.ToString("C2") each</p></div><strong>@((item.Price * item.Quantity).ToString("C2"))</strong></article> }</div></div><OrderSummaryComponent Order="order" HidePlaceOrderButton="true" /></div>
 }
-
+</section>
 
 @code {
-
+    [Parameter] public string Uid { get; set; }
     private Order order;
-
-    [Parameter]
-    public string uId { get; set; }
-
+    private string error;
     protected override void OnParametersSet()
     {
-        base.OnParametersSet();
-
-        if (!string.IsNullOrWhiteSpace(uId))
-        {
-            order = viewOrderConfirmationUseCase.Execute(uId);
-        }
+        order = null; error = null;
+        if (!Guid.TryParse(Uid, out _)) return;
+        try { order = ViewConfirmation.Execute(Uid); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Unable to load order confirmation"); error = "Couldn't load this order. Try again."; }
     }
-
-
-
 }

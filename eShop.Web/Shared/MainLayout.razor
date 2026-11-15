@@ -1,9 +1,20 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="main">
-    <TopNavBar></TopNavBar>
-
-    <div class="content px-4">
-        @Body
+<a class="skip-link" href="#main-content">Skip to content</a>
+<TopNavBar />
+<main id="main-content" class="site-main" tabindex="-1">@Body</main>
+<footer class="site-footer page-container">
+    <div class="footer-main">
+        <p class="footer-note">Makeup &amp; beauty.</p>
+        <nav class="footer-column" aria-label="Shop links">
+            <span>Shop</span>
+            <a href="/products">Products</a>
+            <a href="/cart">Your bag</a>
+        </nav>
+        <nav class="footer-column" aria-label="Account links">
+            <span>Account</span>
+            <a href="/login" target="_top">Admin</a>
+        </nav>
     </div>
-</div>
+    <div class="footer-meta"><span>© @DateTime.Now.Year</span><a href="#main-content">Back to top ↑</a></div>
+</footer>

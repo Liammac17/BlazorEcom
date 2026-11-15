@@ -1,58 +1,30 @@
-﻿@page "/cart"
+<PageTitle>Your bag · MyShop</PageTitle>
+@page "/cart"
+@implements IDisposable
+@inject IShoppingCartStateStore CartState
+@inject IViewShoppingCartUseCase ViewCart
+@inject Microsoft.Extensions.Logging.ILogger<ShoppingCartComponent> Logger
 
-@inject IShoppingCartStateStore shoppingCartStateStore
-@inject IViewShoppingCartUseCase viewShoppingCartUseCase
-
-<h3>Shopping Cart</h3>
-<br/>
-@if (order != null && order.LineItems != null && order.LineItems.Count > 0)
-{
-    <div class="row">
-        <div class="col-6">
-            <ul>
-                @*@foreach(var item in order.LineItems)*@
-                @for (int i = 0; i < order.LineItems.Count; i++)
-                {
-                    <LineItemComponent 
-                                       LineItem="order.LineItems[i]" 
-                                       OnDeleteProduct="HandleDeleteProduct"
-                                       OnUpdateQuantity="HandleUpdateQuantity"></LineItemComponent>
-                    @if (i < order.LineItems.Count - 1)
-                    {
-                        <li style="list-style:none">
-                            <hr />
-                        </li>
-                    }
-                }
-            </ul>
-        </div>
-        <div class="col">
-            <OrderSummaryComponent Order="order"></OrderSummaryComponent>
-        </div>
-    </div>    
-}
+<section class="page-container inner-page"><a class="back-link" href="/products">← Continue shopping</a><div class="page-heading"><h1>Your bag</h1></div>
+@if (!string.IsNullOrEmpty(error)) { <div class="notice notice-error" role="alert">@error <button class="text-button" @onclick="Refresh">Try again</button></div> }
+@if (loading) { <div class="loading-state" role="status">Loading…</div> }
+else if (order?.LineItems?.Count > 0) { <div class="bag-layout"><div class="bag-items">@foreach (var item in order.LineItems) { <LineItemComponent LineItem="item" OnDeleteProduct="SetOrder" OnUpdateQuantity="SetOrder" @key="item.ProductId" /> }</div><OrderSummaryComponent Order="order" /></div> }
+else if (string.IsNullOrEmpty(error)) { <div class="empty-state"><h2>Your bag is empty.</h2><a class="btn btn-primary" href="/products">Shop products</a></div> }
+</section>
 
 @code {
     private Order order;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private string error;
+    private bool loading = true;
+    private bool disposed;
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) { CartState.AddStateChangeListeners(OnCartChanged); await Refresh(); } }
+    private void OnCartChanged() { _ = Refresh(); }
+    private void SetOrder(Order updated) => order = updated;
+    private async Task Refresh()
     {
-        if (firstRender)
-        {
-            shoppingCartStateStore.AddStateChangeListeners(HandleShoppingCartStateChange);
-            order = await viewShoppingCartUseCase.Execute();
-            StateHasChanged();
-        }
+        try { var updated = await ViewCart.Execute(); if (!disposed) { order = updated; error = null; } }
+        catch (Exception ex) { Logger.LogWarning(ex, "Unable to load shopping bag"); if (!disposed) error = "Couldn't load your bag. Try again."; }
+        finally { if (!disposed) { loading = false; await InvokeAsync(StateHasChanged); } }
     }
-
-    private void HandleDeleteProduct(Order order) => this.order = order;
-
-    private void HandleUpdateQuantity(Order order) => this.order = order;
-
-    private async void HandleShoppingCartStateChange()
-    {
-        order = await viewShoppingCartUseCase.Execute();
-        StateHasChanged();
-    }
-
+    public void Dispose() { disposed = true; CartState.RemoveStateChangeListeners(OnCartChanged); }
 }

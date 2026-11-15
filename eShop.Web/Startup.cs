@@ -1,73 +1,102 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.RateLimiting;
+using eShop.CoreBusiness.Services;
+using eShop.DataStore.SQL.Dapper;
+using eShop.StateStore.LocalStorage;
+using eShop.UseCases.OrderConfirmationScreen;
+using eShop.UseCases.OutstandingOrderScreen;
+using eShop.UseCases.PluginInterfaces.DataStore;
+using eShop.UseCases.PluginInterfaces.StateStore;
+using eShop.UseCases.PluginInterfaces.UI;
+using eShop.UseCases.ProcessedOrderScreen;
+using eShop.UseCases.ProcessOrderScreen;
+using eShop.UseCases.SearchProductScreen;
+using eShop.UseCases.ShoppingCartScreen;
+using eShop.UseCases.ViewProductScreen;
+using eShop.Web.Common.JsInterOp;
+using eShop.Web.Data;
+using eShop.Web.Security;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using eShop.Web.Data;
-using eShop.UseCases.SearchProductScreen;
-using eShop.UseCases.PluginInterfaces.DataStore;
-using eShop.ShoppingCart.LocalStorage;
-// using eShop.DataStore.HardCoded;
-using eShop.DataStore.SQL.Dapper;
-using eShop.UseCases.ViewProductScreen;
-using eShop.UseCases.PluginInterfaces.UI;
-using eShop.UseCases.ShoppingCartScreen;
-using eShop.UseCases.PluginInterfaces.StateStore;
-using eShop.StateStore.LocalStorage;
-using eShop.CoreBusiness.Services;
-using eShop.UseCases.OrderConfirmationScreen;
-using eShop.UseCases.OutstandingOrderScreen;
-using eShop.UseCases.ProcessedOrderScreen;
-using eShop.UseCases.ProcessOrderScreen;
-using eShop.Web.Common.JsInterOp;
 
 namespace eShop.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment environment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            this.environment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //Configuration.GetConnectionString
-
-            services.AddControllers();
-            services.AddAuthentication("eShop.CookieAuth")
-                .AddCookie("eShop.CookieAuth", config =>
+            services.AddDataProtection().SetApplicationName("MyShop");
+            services.Configure<AdminAuthenticationOptions>(Configuration.GetSection("AdminAuthentication"));
+            services.AddSingleton<IPasswordHasher<AdminAuthenticationOptions>, PasswordHasher<AdminAuthenticationOptions>>();
+            services.AddScoped<AdminAuthenticationService>();
+            services.AddAuthentication(AdminAuthenticationService.Scheme)
+                .AddCookie(AdminAuthenticationService.Scheme, options =>
                 {
-                    config.Cookie.Name = "eShop.CookieAuth";
-                    config.LoginPath = "/authenticate";
+                    options.Cookie.Name = "MyShop.Admin";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = environment.IsDevelopment()
+                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+                    options.LoginPath = "/login";
+                    options.AccessDeniedPath = "/login";
+                    options.ExpireTimeSpan = AdminAuthenticationService.SessionLifetime;
+                    options.SlidingExpiration = false;
+                    options.Events.OnValidatePrincipal = async context =>
+                    {
+                        var authentication = context.HttpContext.RequestServices.GetRequiredService<AdminAuthenticationService>();
+                        if (!authentication.IsSessionValid(context.Principal, DateTimeOffset.UtcNow))
+                        {
+                            context.RejectPrincipal();
+                            await context.HttpContext.SignOutAsync(AdminAuthenticationService.Scheme);
+                        }
+                    };
                 });
+            services.AddAuthorization(options => options.AddPolicy(AdminAuthenticationService.Policy,
+                policy => policy.RequireAuthenticatedUser().RequireRole(AdminAuthenticationService.Role)));
+            services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("admin-sign-in", context => RateLimitPartition.GetFixedWindowLimiter(
+                    context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        AutoReplenishment = true
+                    }));
+            });
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
+            services.AddScoped<AuthenticationStateProvider, AdminRevalidatingAuthenticationStateProvider>();
+            services.AddSingleton<WeatherForecastService>();
             services.AddTransient<JsNavigator>();
-            
-            //services.AddSingleton<IProductRepository, ProductRepository>();
-            //services.AddSingleton<IOrderRepository, OrderRepository>();
             services.AddScoped<IShoppingCartStateStore, ShoppingCartStateStore>();
-            
+            services.AddScoped<IShoppingCart, eShop.ShoppingCart.LocalStorage.ShoppingCart>();
             services.AddTransient<IOrderService, OrderService>();
-
-            services.AddTransient<IDataAccess>(sp => new DataAccess(Configuration.GetConnectionString("Default")));
+            services.AddTransient<IDataAccess>(_ => new DataAccess(Configuration.GetConnectionString("Default")));
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
-
-            services.AddTransient<IShoppingCart, eShop.ShoppingCart.LocalStorage.ShoppingCart>();            
             services.AddTransient<ISearchProductUseCase, SearchProductUseCase>();
             services.AddTransient<IViewProductUseCase, ViewProductUseCase>();
             services.AddTransient<IAddProductToCartUseCase, AddProductToCartUseCase>();
@@ -76,37 +105,31 @@ namespace eShop.Web
             services.AddTransient<IViewShoppingCartUseCase, ViewShoppingCartUseCase>();
             services.AddTransient<IPlaceOrderUseCase, PlaceOrderUseCase>();
             services.AddTransient<IViewOrderConfirmationUseCase, ViewOrderConfirmationUseCase>();
-
             services.AddTransient<IViewOutstandingOrderUseCase, ViewOutstandingOrderUseCase>();
             services.AddTransient<IViewProcessedOrdersUseCase, ViewProcessedOrdersUseCase>();
             services.AddTransient<IViewOrderDetailUseCase, ViewOrderDetailUseCase>();
             services.AddTransient<IProcessOrderUseCase, ProcessOrderUseCase>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

@@ -1,23 +1,44 @@
-﻿@page "/outstandingorders"
-@page "/admin" 
+@page "/outstandingorders"
+@page "/admin"
+@attribute [Authorize(Policy = "Admin")]
+@inject IViewOutstandingOrderUseCase viewOutstandingOrderUseCase
+@inject Microsoft.Extensions.Logging.ILogger<OutstandingOrdersComponent> logger
 
-@attribute [Authorize]
+<PageTitle>Orders · MyShop</PageTitle>
+<section class="page-container inner-page">
+<header class="page-heading">
+    <div><h1>Orders</h1></div>
+    <span class="status-badge">@orders.Count pending</span>
+</header>
+<nav class="admin-tabs" aria-label="Order status">
+    <NavLink href="/outstandingorders" Match="NavLinkMatch.All">Pending</NavLink>
+    <NavLink href="/processedorders">Processed</NavLink>
+</nav>
+@if (error != null)
+{
+    <div class="notice notice-error" role="alert"><span>@error</span><button class="btn btn-outline" @onclick="LoadOrders">Try again</button></div>
+}
+else
+{
+    <OrderListComponent Orders="orders" EmptyTitle="No pending orders" EmptyMessage="" />
+}
 
-@inject IViewOutstandingOrderUseCase viewOutstandingOrderUseCase 
+</section>
 
-<h3>Outstanding Orders</h3>
-<br/>
-<OrderListComponent Orders="orders"></OrderListComponent>
+@code {
+    private List<Order> orders = new List<Order>();
+    private string error;
 
-@code { 
+    protected override void OnInitialized() => LoadOrders();
 
-    private IEnumerable<Order> orders;
-
-    protected override void OnInitialized()
+    private void LoadOrders()
     {
-        base.OnInitialized();
-
-        orders = viewOutstandingOrderUseCase.Execute();
+        error = null;
+        try { orders = viewOutstandingOrderUseCase.Execute().ToList(); }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Unable to load outstanding orders.");
+            error = "Could not load orders.";
+        }
     }
-
 }

@@ -1,53 +1,61 @@
-﻿@page "/"
+<PageTitle>Shop · MyShop</PageTitle>
+@page "/"
 @page "/products"
+@inject ISearchProductUseCase SearchProducts
+@inject Microsoft.Extensions.Logging.ILogger<SearchProductComponent> Logger
 
-@inject ISearchProductUseCase searchProduct
-
-
-<div class="container">
-    <SearchBarComponent OnSearch="HandleSearch"></SearchBarComponent>
-    <br />
-
-    @if (products != null && products.Count() > 0)
+<section class="storefront-hero page-container" aria-labelledby="catalog-title">
+    <div class="storefront-intro">
+        <h1 id="catalog-title">Beauty<br /><em>essentials.</em></h1>
+        <a class="btn btn-primary" href="#collection">Shop products <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="hero-products">
+        @for (var index = 0; index < featuredProducts.Count; index++)
+        {
+            var product = featuredProducts[index];
+            <a class="@($"featured-product featured-product-{index}")" href="@($"/product/{product.ProductId}")" aria-label="@($"View {product.Name}")">
+                <img src="@product.ImageLink" alt="" onerror="this.onerror=null;this.src='/images/product-placeholder.svg'" />
+            </a>
+        }
+    </div>
+</section>
+<section id="collection" class="collection page-container" aria-labelledby="collection-title">
+    <div class="collection-heading">
+        <div class="collection-label"><h2 id="collection-title">Products</h2><span class="result-count" aria-live="polite">@products.Count @(products.Count == 1 ? "product" : "products")</span></div>
+        <SearchBarComponent OnSearch="HandleSearch" @key="searchVersion" />
+    </div>
+    @if (!string.IsNullOrEmpty(error))
     {
-        int i = 0;
-
-        <div class="row">
-            @foreach (var product in products)
-            {
-                i++;
-                if (i % 6 != 0)
-                {
-                    <ProductCardComponent Product="product"></ProductCardComponent>
-                }
-                else
-                {
-                    @*<div class="w-100"></div>*@
-                }
-
-            }
-        </div>
+        <div class="notice notice-error" role="alert">@error <button class="text-button" @onclick="Retry">Try again</button></div>
+    }
+    else if (products.Count == 0)
+    {
+        <div class="empty-state"><h3>No products found.</h3><button class="btn btn-outline" @onclick="ClearSearch">Show all products</button></div>
     }
     else
     {
-        <text>Not Products Found.</text>
+        <div class="product-grid">@foreach (var product in products) { <ProductCardComponent Product="product" @key="product.ProductId" /> }</div>
     }
-</div>
+</section>
 
 @code {
-
-    private IEnumerable<Product> products;
-
-    protected override void OnInitialized()
+    private List<Product> products = new();
+    private List<Product> featuredProducts = new();
+    private string filter;
+    private int searchVersion;
+    private string error;
+    protected override void OnInitialized() => LoadProducts();
+    private void HandleSearch(string value) { filter = value; LoadProducts(); }
+    private void Retry() => LoadProducts();
+    private void ClearSearch() { filter = null; searchVersion++; LoadProducts(); }
+    private void LoadProducts()
     {
-        base.OnInitialized();
-
-        products = searchProduct.Execute();
+        try
+        {
+            products = SearchProducts.Execute(filter)?.ToList() ?? new();
+            if (featuredProducts.Count == 0 && string.IsNullOrEmpty(filter)) featuredProducts = products.Take(3).ToList();
+            error = null;
+        }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to load the catalog"); products = new(); error = "Couldn't load products. Try again."; }
     }
-
-    private void HandleSearch(string filter)
-    {
-        products = searchProduct.Execute(filter);
-    }
-
 }

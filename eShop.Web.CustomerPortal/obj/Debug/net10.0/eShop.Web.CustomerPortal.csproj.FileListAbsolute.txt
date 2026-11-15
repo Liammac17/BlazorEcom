@@ -6,11 +6,9 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eSho
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.Web.CustomerPortal.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.Web.CustomerPortal.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.CoreBusiness.dll
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.StateStore.LocalStorage.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.UseCases.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.Web.Common.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.CoreBusiness.pdb
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.StateStore.LocalStorage.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.UseCases.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\bin\Debug\net10.0\eShop.Web.Common.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\EmbeddedAttribute.cs
@@ -26,8 +24,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\rjim
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\scopedcss\bundle\eShop.Web.CustomerPortal.styles.css
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\compressed\axsv6nc1lr-{0}-yhjgo0gitb-yhjgo0gitb.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\compressed\qwbm9ia3rf-{0}-laf9iglwpr-laf9iglwpr.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\staticwebassets.development.json
@@ -45,3 +41,5 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\eSho
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\refint\eShop.Web.CustomerPortal.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\eShop.Web.CustomerPortal.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\ref\eShop.Web.CustomerPortal.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\compressed\qwbm9ia3rf-{0}-t7monxu8dx-t7monxu8dx.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.CustomerPortal\obj\Debug\net10.0\compressed\axsv6nc1lr-{0}-j3ej2y8x18-j3ej2y8x18.gz

@@ -1,103 +1,45 @@
-﻿using eShop.CoreBusiness.Models;
+using eShop.CoreBusiness.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace eShop.CoreBusiness.Services
 {
     public class OrderService : IOrderService
     {
-        public bool ValidateCustomerInformation(
-                string name,
-                string address,
-                string city,
-                string province,
-                string country)
-        {
-            if (string.IsNullOrWhiteSpace(name) ||
-                string.IsNullOrWhiteSpace(address) ||
-                string.IsNullOrWhiteSpace(city) ||
-                string.IsNullOrWhiteSpace(province) ||
-                string.IsNullOrWhiteSpace(country)) return false;
-
-            return true;
-        }
+        public bool ValidateCustomerInformation(string name, string address, string city, string province, string country)
+            => HasText(name, 150) && HasText(address, 150) && HasText(city, 50)
+                && HasText(province, 50) && HasText(country, 50);
 
         public bool ValidateCreateOrder(Order order)
-        {            
-            //order has to existi
-            if (order == null) return false;
-
-            //order has to have order line items
-            if (order.LineItems == null || order.LineItems.Count <= 0) return false;
-
-            ////Placed Date has to be populated
-            //if (!order.DatePlaced.HasValue) return false;
-
-            ////Other dates
-            //if (order.DateProcessed.HasValue || order.DateProcessing.HasValue) return false;
-
-            //validating line items
-            foreach (var item in order.LineItems)
-            {
-                if (item.ProductId <= 0 ||
-                    item.Price < 0 ||
-                    item.Quantity <= 0) return false;
-            }
-
-            //validate customer info
-            if (!ValidateCustomerInformation(order.CustomerName,
-                    order.CustomerAddress,
-                    order.CustomerCity,
-                    order.CustomerStateProvince,
-                    order.CustomerCountry)) return false;
-
-            return true;
-        }
+            => order != null && !order.OrderId.HasValue && order.DatePlaced.HasValue
+                && !order.DateProcessing.HasValue && !order.DateProcessed.HasValue
+                && string.IsNullOrWhiteSpace(order.AdminUser)
+                && Guid.TryParse(order.UniqueId, out _)
+                && ValidLines(order)
+                && ValidateCustomerInformation(order.CustomerName, order.CustomerAddress,
+                    order.CustomerCity, order.CustomerStateProvince, order.CustomerCountry);
 
         public bool ValidateUpdateOrder(Order order)
-        {
-            //order has to existi
-            if (order == null) return false;
-            if (!order.OrderId.HasValue) return false;
-
-            //order has to have order line items
-            if (order.LineItems == null || order.LineItems.Count <= 0) return false;
-
-            //Placed Date has to be populated
-            if (!order.DatePlaced.HasValue) return false;
-
-            //Other dates
-            if (order.DateProcessed.HasValue || order.DateProcessing.HasValue) return false;
-
-            //valiate uniqueId
-            if (string.IsNullOrWhiteSpace(order.UniqueId)) return false;
-
-            //validating line items
-            foreach (var item in order.LineItems)
-            {
-                if (item.ProductId <= 0 ||
-                    item.Price < 0 ||
-                    item.Quantity <= 0 ||
-                    item.OrderId == order.OrderId) return false;
-            }
-
-            //validate customer info
-            if (!ValidateCustomerInformation(order.CustomerName,
-                    order.CustomerAddress,
-                    order.CustomerCity,
-                    order.CustomerStateProvince,
-                    order.CustomerCountry)) return false;
-
-            return true;
-        }
+            => order != null && order.OrderId > 0 && order.DatePlaced.HasValue
+                && !order.DateProcessing.HasValue && !order.DateProcessed.HasValue
+                && Guid.TryParse(order.UniqueId, out _) && ValidLines(order)
+                && order.LineItems.All(item => item.OrderId == order.OrderId)
+                && ValidateCustomerInformation(order.CustomerName, order.CustomerAddress,
+                    order.CustomerCity, order.CustomerStateProvince, order.CustomerCountry);
 
         public bool ValidateProcessOrder(Order order)
-        {
-            if (!order.DateProcessed.HasValue || 
-                string.IsNullOrWhiteSpace(order.AdminUser)) return false;
+            => order != null && order.OrderId > 0 && order.DateProcessed.HasValue
+                && HasText(order.AdminUser, 150);
 
-            return true;
-        }
+        private static bool ValidLines(Order order)
+            => order.LineItems != null && order.LineItems.Count > 0
+                && order.LineItems.Count <= Order.MaximumLines
+                && order.LineItems.All(item => item != null && item.ProductId > 0
+                    && item.Price > 0 && item.Price <= 1000000m
+                    && item.Quantity > 0 && item.Quantity <= Order.MaximumQuantity)
+                && order.LineItems.Select(item => item.ProductId).Distinct().Count() == order.LineItems.Count;
+
+        private static bool HasText(string value, int maximum)
+            => !string.IsNullOrWhiteSpace(value) && value.Trim().Length <= maximum;
     }
 }

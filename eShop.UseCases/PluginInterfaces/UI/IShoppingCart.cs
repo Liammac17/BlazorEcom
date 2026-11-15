@@ -13,7 +13,6 @@ namespace eShop.UseCases.PluginInterfaces.UI
         Task<Order> UpdateQuantityAsync(int productId, int quanity);
         Task UpdateOrderAsync(Order order);
         Task<Order> DeleteProductAsync(int productId);
-        Task<Order> PlaceOrderAsync();
-        Task EmptyAsync();
+        Task EmptyAsync(string checkoutId = null);
     }
 }

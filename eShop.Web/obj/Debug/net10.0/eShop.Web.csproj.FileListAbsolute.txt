@@ -15,7 +15,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\eShop.Web.deps.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\eShop.Web.runtimeconfig.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\eShop.Web.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\eShop.Web.pdb
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\AutoMapper.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Dapper.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.Data.SqlClient.dll
@@ -28,7 +27,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.IdentityM
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Microsoft.SqlServer.Server.dll
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\Newtonsoft.Json.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\System.Configuration.ConfigurationManager.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\bin\Debug\net10.0\System.Security.Cryptography.ProtectedData.dll
@@ -84,13 +82,9 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\rjimswa.dswa.cache.
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\scopedcss\bundle\eShop.Web.styles.css
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\esmburfrsa-{0}-etnb7xlipe-etnb7xlipe.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\j3dhw5w714-{0}-kao5znno1s-kao5znno1s.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\yvml5rxv1u-{0}-cmapd0fi15-cmapd0fi15.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\6uiv40jzmw-{0}-wk8x8xm0ah-wk8x8xm0ah.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\g8r0czaj1u-{0}-sjnzgf7e1h-sjnzgf7e1h.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\31ccgboo63-{0}-psxpu4y82n-psxpu4y82n.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\s2ybiqeobi-{0}-ta7o26way7-ta7o26way7.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\yf7mnxalxp-{0}-90yqlj465b-90yqlj465b.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\asn7ykaodx-{0}-whefm3rrpu-whefm3rrpu.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\13oza12jcx-{0}-kyitu4x8cy-kyitu4x8cy.gz
@@ -106,3 +100,10 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\refint\eShop.Web.dl
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\eShop.Web.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\eShop.Web.genruntimeconfig.cache
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\ref\eShop.Web.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\31ccgboo63-{0}-l5877nzu3a-l5877nzu3a.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\g8r0czaj1u-{0}-10uzszoped-10uzszoped.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\esmburfrsa-{0}-o2wlpouf80-o2wlpouf80.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\sieyo7yrjd-{0}-geuoqn0ak9-geuoqn0ak9.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\w6y4590yy2-{0}-yahhua0kkj-yahhua0kkj.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\cz2v6q4jp5-{0}-gf4377ot7k-gf4377ot7k.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web\obj\Debug\net10.0\compressed\s2ybiqeobi-{0}-6nuz99vvwu-6nuz99vvwu.gz

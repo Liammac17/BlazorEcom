@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\exampleJsInterop.js"
     },
     {
+      "Id": "C:\\Users\\Liam\\Desktop\\BlazorEcom\\eShop.ShoppingCart.LocalStorage\\wwwroot\\myShopCart.js",
+      "PackagePath": "staticwebassets\\myShopCart.js"
+    },
+    {
       "Id": "C:\\Users\\Liam\\Desktop\\BlazorEcom\\eShop.ShoppingCart.LocalStorage\\wwwroot\\styles.css",
       "PackagePath": "staticwebassets\\styles.css"
     },

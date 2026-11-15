@@ -7,6 +7,8 @@ namespace eShop.CoreBusiness.Models
 {
     public class Order
     {
+        public const int MaximumQuantity = 99;
+        public const int MaximumLines = 100;
         public Order()
         {
             LineItems = new List<OrderLineItem>();
@@ -25,25 +27,32 @@ namespace eShop.CoreBusiness.Models
         public List<OrderLineItem> LineItems { get; set; }
         public string UniqueId { get; set; }
 
-        public void AddProduct(int productId, int qty, double price)
+        public void AddProduct(int productId, int qty, decimal price, Product product = null)
         {
+            if (productId <= 0) throw new ArgumentOutOfRangeException(nameof(productId));
+            if (qty <= 0 || qty > MaximumQuantity) throw new ArgumentOutOfRangeException(nameof(qty));
+            if (price <= 0 || price > 1000000m) throw new ArgumentOutOfRangeException(nameof(price));
+
             var item = LineItems.FirstOrDefault(x => x.ProductId == productId);
-            if (item != null)            
+            if (item != null)
+            {
+                if (item.Quantity > MaximumQuantity - qty)
+                    throw new ArgumentOutOfRangeException(nameof(qty), $"A product is limited to {MaximumQuantity} units.");
                 item.Quantity += qty;
+                item.Price = price;
+                item.Product = product ?? item.Product;
+            }
             else
-                LineItems.Add(new OrderLineItem { ProductId = productId, Quantity = qty, Price = price, OrderId = OrderId });
+            {
+                if (LineItems.Count >= MaximumLines)
+                    throw new InvalidOperationException($"A basket is limited to {MaximumLines} products.");
+                LineItems.Add(new OrderLineItem { ProductId = productId, Quantity = qty, Price = price, OrderId = OrderId, Product = product });
+            }
         }
 
         public void RemoveProduct(int productId)
         {
-            foreach(var item in LineItems)
-            {
-                if (item.ProductId == productId)
-                {
-                    LineItems.Remove(item);
-                    break;
-                }
-            }
+            LineItems.RemoveAll(item => item.ProductId == productId);
         }
 
     }

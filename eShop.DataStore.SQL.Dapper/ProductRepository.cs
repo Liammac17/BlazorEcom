@@ -1,14 +1,12 @@
-﻿using eShop.CoreBusiness.Models;
+using eShop.CoreBusiness.Models;
 using eShop.UseCases.PluginInterfaces.DataStore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace eShop.DataStore.SQL.Dapper
 {
     public class ProductRepository : IProductRepository
     {
+        private const string Columns = "ProductId, Brand, Name, Price, ImageLink, Description";
         private readonly IDataAccess dataAccess;
 
         public ProductRepository(IDataAccess dataAccess)
@@ -18,18 +16,21 @@ namespace eShop.DataStore.SQL.Dapper
 
         public Product GetProduct(int id)
         {
-            return dataAccess.QuerySingle<Product, dynamic>("SELECT * FROM Product WHERE ProductId = @ProductId", new { ProductId = id });
+            if (id <= 0) return null;
+            return dataAccess.QuerySingleOrDefault<Product, object>(
+                $"SELECT {Columns} FROM dbo.Product WHERE ProductId = @ProductId", new { ProductId = id });
         }
 
-        public IEnumerable<Product> GetProducts(string filter)
+        public IEnumerable<Product> GetProducts(string filter = null)
         {
-            List<Product> list;
             if (string.IsNullOrWhiteSpace(filter))
-                list = dataAccess.Query<Product, dynamic>("SELECT * FROM Product", new { });
-            else
-                list = dataAccess.Query<Product, dynamic>("SELECT * FROM Product WHERE Name like '%' + @Filter + '%'", new { Filter = filter });
+                return dataAccess.Query<Product, object>($"SELECT {Columns} FROM dbo.Product ORDER BY Name, ProductId", new { });
 
-            return list.AsEnumerable();
-        }        
+            // Treat SQL LIKE wildcard characters as literal search text.
+            var escaped = filter.Trim().Replace("~", "~~").Replace("%", "~%").Replace("_", "~_").Replace("[", "~[");
+            return dataAccess.Query<Product, object>(
+                $"SELECT {Columns} FROM dbo.Product WHERE Name LIKE @Filter ESCAPE '~' OR Brand LIKE @Filter ESCAPE '~' ORDER BY Name, ProductId",
+                new { Filter = "%" + escaped + "%" });
+        }
     }
 }

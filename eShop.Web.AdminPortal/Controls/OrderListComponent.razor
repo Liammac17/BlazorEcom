@@ -1,29 +1,29 @@
-﻿@if (Orders != null && Orders.Count() > 0)
+@if (orderList.Count > 0)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date Placed</th>
-                <th>Order Id</th>
-                <th>Country</th>
-                <th>State / Province</th>
-                <th>City</th>
-                <th>Customer Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Orders)
-            {
-                <OrderComponent Order="order"></OrderComponent>
-            }
-        </tbody>
-    </table>
+    <section class="admin-panel">
+        <div class="table-wrap">
+            <table class="admin-table">
+                <caption class="sr-only">MyShop customer orders</caption>
+                <thead><tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Destination</th><th scope="col">Placed</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Details</span></th></tr></thead>
+                <tbody>
+                    @foreach (var order in orderList)
+                    {
+                        <OrderComponent @key="order.OrderId" Order="order" />
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+else
+{
+    <section class="empty-state"><h2>@EmptyTitle</h2><p>@EmptyMessage</p></section>
 }
 
-
 @code {
-
-    [Parameter]
-    public IEnumerable<Order> Orders { get; set; }
-
+    [Parameter] public IEnumerable<Order> Orders { get; set; }
+    [Parameter] public string EmptyTitle { get; set; } = "No orders";
+    [Parameter] public string EmptyMessage { get; set; } = "";
+    private List<Order> orderList = new List<Order>();
+    protected override void OnParametersSet() => orderList = Orders?.ToList() ?? new List<Order>();
 }

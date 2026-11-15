@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\eShop.CoreBusiness\eShop.CoreBusiness.csproj" />
     <ProjectReference Include="..\eShop.UseCases\eShop.UseCases.csproj" />
-    <ProjectReference Include="..\Plugins\eShop.DataStore.HardCoded\eShop.DataStore.HardCoded.csproj" />
   </ItemGroup>
 
 </Project>

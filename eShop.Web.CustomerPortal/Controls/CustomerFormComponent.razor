@@ -1,57 +1,17 @@
-﻿
-@if (customer != null)
-{
-    <EditForm Model="customer" class="form-line" OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <ValidationSummary></ValidationSummary>
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText id="name" @bind-Value="customer.CustomerName" class="form-control"></InputText>
-        </div>
-
-        <div class="form-group">
-            <label for="address">Address</label>
-            <InputText id="address" @bind-Value="customer.CustomerAddress" class="form-control"></InputText>
-        </div>
-
-        <div class="form-group">
-            <label for="city">City</label>
-            <InputText id="city" @bind-Value="customer.CustomerCity" class="form-control"></InputText>
-        </div>
-
-        <div class="form-group">
-            <label for="province">Province</label>
-            <InputText id="province" @bind-Value="customer.CustomerStateProvince" class="form-control"></InputText>
-        </div>
-
-        <div class="form-group">
-            <label for="country">Country</label>
-            <InputText id="country" @bind-Value="customer.CustomerCountry" class="form-control"></InputText>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Place Order</button>
-    </EditForm>
-}
-
+<EditForm Model="customer" OnValidSubmit="Submit" class="customer-form">
+    <DataAnnotationsValidator /><ValidationSummary />
+    <div class="form-section-title"><div><h2>Shipping address</h2></div></div>
+    <div class="form-group"><label for="customer-name">Full name</label><InputText id="customer-name" @bind-Value="customer.CustomerName" class="form-control" autocomplete="name" maxlength="150" /><ValidationMessage For="@(() => customer.CustomerName)" /></div>
+    <div class="form-group"><label for="customer-address">Street address</label><InputText id="customer-address" @bind-Value="customer.CustomerAddress" class="form-control" autocomplete="street-address" maxlength="150" /><ValidationMessage For="@(() => customer.CustomerAddress)" /></div>
+    <div class="form-grid"><div class="form-group"><label for="customer-city">City</label><InputText id="customer-city" @bind-Value="customer.CustomerCity" class="form-control" autocomplete="address-level2" maxlength="50" /><ValidationMessage For="@(() => customer.CustomerCity)" /></div><div class="form-group"><label for="customer-province">State / province</label><InputText id="customer-province" @bind-Value="customer.CustomerStateProvince" class="form-control" autocomplete="address-level1" maxlength="50" /><ValidationMessage For="@(() => customer.CustomerStateProvince)" /></div></div>
+    <div class="form-group"><label for="customer-country">Country</label><InputText id="customer-country" @bind-Value="customer.CustomerCountry" class="form-control" autocomplete="country-name" maxlength="50" /><ValidationMessage For="@(() => customer.CustomerCountry)" /></div>
+    <button type="submit" class="btn btn-primary btn-full" disabled="@(IsSubmitting || submitting)">@(IsSubmitting || submitting ? "Placing order…" : "Place order") <span aria-hidden="true">↗</span></button>
+</EditForm>
 
 @code {
-
-    private CustomerViewModel customer;
-
-    [Parameter]
-    public EventCallback<CustomerViewModel> OnCustomerInfoSubmitted { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        customer = new CustomerViewModel();
-    }
-
-    private void HandleValidSubmit()
-    {
-        OnCustomerInfoSubmitted.InvokeAsync(customer);
-    }
-
+    private CustomerViewModel customer = new();
+    private bool submitting;
+    [Parameter] public bool IsSubmitting { get; set; }
+    [Parameter] public EventCallback<CustomerViewModel> OnCustomerInfoSubmitted { get; set; }
+    private async Task Submit() { if (submitting || IsSubmitting) return; submitting = true; try { await OnCustomerInfoSubmitted.InvokeAsync(customer); } finally { submitting = false; } }
 }

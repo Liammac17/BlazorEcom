@@ -1,84 +1,103 @@
-﻿@page "/processorder/{id:int}"
-
-@attribute [Authorize]
-
+@page "/processorder/{id:int}"
+@attribute [Authorize(Policy = "Admin")]
 @inject NavigationManager NavigationManager
-
 @inject IViewOrderDetailUseCase viewOrderDetailUseCase
 @inject IProcessOrderUseCase processOrderUseCase
+@inject Microsoft.Extensions.Logging.ILogger<ProcessOrderComponent> logger
 
-<h3>Process Order</h3>
-
+<PageTitle>Order details · MyShop</PageTitle>
+<section class="page-container inner-page">
+<a class="back-link" href="/outstandingorders">← Back to orders</a>
+@if (error != null)
+{
+    <div class="notice notice-error" role="alert">@error</div>
+}
 @if (order != null)
 {
-    <p>
-        <b>Customer Info:</b>
-    </p>
-    <p>@order.CustomerName</p>
-    <p>@order.CustomerAddress</p>
-    <p>@order.CustomerCity</p>
-    <p>@order.CustomerStateProvince</p>
-    <p>@order.CustomerCountry</p>
-    <br />
-
-    <br />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in order.LineItems)
+    <header class="page-heading">
+        <div><h1>Order #@order.OrderId</h1><p class="page-subtitle">Placed @order.DatePlaced?.ToString("MMMM d, yyyy")</p></div>
+        <span class="status-badge @(order.DateProcessed.HasValue ? "status-complete" : "")">@(order.DateProcessed.HasValue ? "Processed" : "Pending")</span>
+    </header>
+    <div class="order-detail-layout">
+        <section class="admin-panel">
+            <div class="panel-heading"><h2>Items</h2><span>@order.LineItems.Sum(item => item.Quantity) items</span></div>
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <caption class="sr-only">Items in order @order.OrderId</caption>
+                    <thead><tr><th scope="col">Product</th><th scope="col">Unit price</th><th scope="col">Quantity</th><th scope="col">Total</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in order.LineItems)
+                        {
+                            <tr><td>@(item.Product?.Name ?? $"Product #{item.ProductId}")</td><td>@item.Price.ToString("C")</td><td>@item.Quantity</td><td>@((item.Price * item.Quantity).ToString("C"))</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="order-total"><span>Order total</span><strong>@order.LineItems.Sum(item => item.Price * item.Quantity).ToString("C")</strong></div>
+        </section>
+        <aside class="admin-panel address-block">
+            <p class="eyebrow">Shipping address</p><h2>@order.CustomerName</h2>
+            <address>@order.CustomerAddress<br />@order.CustomerCity, @order.CustomerStateProvince<br />@order.CustomerCountry</address>
+            @if (order.DateProcessed.HasValue)
             {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Product.Price</td>
-                    <td>@item.Quantity</td>
-                </tr>
+                <div class="processing-note"><strong>Processed @order.DateProcessed.Value.ToString("MMM d, yyyy")</strong><p>By @order.AdminUser</p></div>
             }
-        </tbody>
-    </table>
-
-    <br />
-    <button type="button" class="btn btn-primary" @onclick="HandleProcessOrder">Mark Order as Processed</button>
+            else
+            {
+                <button type="button" class="btn btn-primary" disabled="@isProcessing" @onclick="HandleProcessOrder">@(isProcessing ? "Processing…" : "Mark as processed")</button>
+            }
+        </aside>
+    </div>
+}
+else if (error == null)
+{
+    <section class="empty-state"><h1>Order not found</h1><a href="/outstandingorders" class="btn btn-primary">View orders</a></section>
 }
 
+</section>
+
 @code {
+    [Parameter] public int Id { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> authStateTask { get; set; }
     private AuthenticationState authState;
-
-    [Parameter]
-    public int Id { get; set; } = 0;
-
-    [CascadingParameter]
-    private Task<AuthenticationState> authStateTask { get; set; }
-
     private Order order;
+    private string error;
+    private bool isProcessing;
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
+        order = null;
+        error = null;
         authState = await authStateTask;
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-
-        if (Id > 0)
+        if (Id <= 0) return;
+        try { order = viewOrderDetailUseCase.Execute(Id); }
+        catch (Exception exception)
         {
-            order = viewOrderDetailUseCase.Execute(Id);
+            logger.LogError(exception, "Unable to load order {OrderId}.", Id);
+            error = "Could not load this order.";
         }
     }
 
     private void HandleProcessOrder()
     {
-        if (order != null && authState != null)
+        if (isProcessing || order?.OrderId == null || order.DateProcessed.HasValue || authState?.User.IsInRole("Administrator") != true) return;
+        isProcessing = true;
+        error = null;
+        try
         {
-            processOrderUseCase.Execute(order.OrderId.Value, authState.User.Identity.Name);
-            NavigationManager.NavigateTo("outstandingorders");
+            if (processOrderUseCase.Execute(order.OrderId.Value, authState.User.Identity.Name))
+                NavigationManager.NavigateTo("/processedorders");
+            else
+            {
+                error = "Order not updated. Refresh to check its status.";
+                order = viewOrderDetailUseCase.Execute(Id);
+            }
         }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Unable to process order {OrderId}.", Id);
+            error = "Could not update this order.";
+        }
+        finally { isProcessing = false; }
     }
-
 }

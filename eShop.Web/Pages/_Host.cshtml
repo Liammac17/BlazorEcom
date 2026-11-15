@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @namespace eShop.Web.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -10,8 +10,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>eShop.Web</title>
+    <component type="typeof(Microsoft.AspNetCore.Components.Web.HeadOutlet)" render-mode="ServerPrerendered" />
+    <meta name="description" content="Shop makeup and beauty products at MyShop." />
     <base href="~/" />
+    <link rel="icon" href="myshop.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
 </head>
@@ -19,7 +21,6 @@
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -28,9 +29,8 @@
             An unhandled exception has occurred. See browser dev tools for details.
         </environment>
         <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+        <button type="button" class="dismiss" aria-label="Dismiss error">×</button>
     </div>
-
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/eShop.Web.Common/jsNavigator.js"></script>
 </body>

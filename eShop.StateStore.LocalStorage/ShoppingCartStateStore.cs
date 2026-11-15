@@ -2,6 +2,7 @@
 using eShop.UseCases.PluginInterfaces.UI;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace eShop.StateStore.LocalStorage
 {
@@ -23,7 +24,7 @@ namespace eShop.StateStore.LocalStorage
         {
             var order = await shoppingCart.GetOrderAsync();
             if (order != null && order.LineItems != null && order.LineItems.Count > 0)            
-                return order.LineItems.Count;                            
+                return order.LineItems.Sum(item => item.Quantity);
 
             return 0;
         }

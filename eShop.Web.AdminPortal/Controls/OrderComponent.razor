@@ -1,34 +1,13 @@
-﻿@if (Order != null)
+@if (Order != null)
 {
     <tr>
-        <td>
-            @if (Order.DatePlaced.HasValue)
-            {
-                @Order.DatePlaced.Value.ToString("yyyy-MM-dd")
-            }            
-        </td>
-        <td>
-            @if (!Order.DateProcessed.HasValue)
-            {
-                <NavLink href="@($"processorder/{Order.OrderId}")">
-                    @Order.OrderId
-                </NavLink>
-            }
-            else
-            {
-                @Order.OrderId
-            }
-        </td>
-        <td>@Order.CustomerCountry</td>
-        <td>@Order.CustomerStateProvince</td>
-        <td>@Order.CustomerCity</td>
-        <td>@Order.CustomerName</td>
+        <td><a class="order-link" href="@($"/processorder/{Order.OrderId}")">#@Order.OrderId</a></td>
+        <td><strong>@Order.CustomerName</strong></td>
+        <td>@Order.CustomerCity, @Order.CustomerStateProvince<br /><span class="muted">@Order.CustomerCountry</span></td>
+        <td>@Order.DatePlaced?.ToString("MMM d, yyyy")</td>
+        <td><span class="status-badge @(Order.DateProcessed.HasValue ? "status-complete" : "")">@(Order.DateProcessed.HasValue ? "Processed" : "Pending")</span></td>
+        <td><a class="text-link" href="@($"/processorder/{Order.OrderId}")">View <span aria-hidden="true">↗</span></a></td>
     </tr>
 }
 
-@code {
-
-    [Parameter]
-    public Order Order { get; set; }
-
-}
+@code { [Parameter] public Order Order { get; set; } }

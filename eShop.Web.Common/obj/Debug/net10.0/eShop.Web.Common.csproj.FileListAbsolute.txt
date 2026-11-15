@@ -18,8 +18,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\rjimswa.dswa
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\scopedcss\bundle\eShop.Web.Common.styles.css
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\compressed\yvkjdu8qlf-{0}-j6sh68bpm0-j6sh68bpm0.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\compressed\0gumvsudyk-{0}-laf9iglwpr-laf9iglwpr.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\staticwebassets.development.json
@@ -37,3 +35,5 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\eShop.Web.Co
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\refint\eShop.Web.Common.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\eShop.Web.Common.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\ref\eShop.Web.Common.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\compressed\0gumvsudyk-{0}-t7monxu8dx-t7monxu8dx.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.Web.Common\obj\Debug\net10.0\compressed\yvkjdu8qlf-{0}-1a1p2ukibc-1a1p2ukibc.gz

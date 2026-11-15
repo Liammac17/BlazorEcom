@@ -1,49 +1,41 @@
-﻿@page "/product/{id:int}"
+<PageTitle>Product details · MyShop</PageTitle>
+@page "/product/{id:int}"
+@inject NavigationManager Navigation
+@inject IViewProductUseCase ViewProduct
+@inject IAddProductToCartUseCase AddProduct
+@inject Microsoft.Extensions.Logging.ILogger<ViewProductComponent> Logger
 
-@inject NavigationManager NavigationManager
-@inject IViewProductUseCase viewProductUseCase
-@inject IAddProductToCartUseCase  addProductToCartUseCase
-
-<h3>Product Details</h3>
-
-<div class="card" style="width: 28rem;">
-    <div class="card-body">
-        <img src="@product.ImageLink" />
-        <h5 class="card-title">@product.Name</h5>
-        <h6 class="card-subtitle mb-2 text-muted">@product.Brand</h6>
-        <hr />
-        <p>
-            Price: <label style="color:darkred">@product.Price.ToString("c")</label>
-        </p>
-        <p class="card-text">@product.Description</p>
-    </div>    
-    <AuthorizeView>
-        <NotAuthorized>
-            <button class="button btn-primary" @onclick="AddToCart">Add to Cart</button>
-        </NotAuthorized>
-    </AuthorizeView>    
-</div>
-<br/>
-<NavLink href="products">Back to Products</NavLink>
+<section class="page-container product-detail-page">
+    <a class="back-link" href="/products">← Back to products</a>
+    @if (!string.IsNullOrEmpty(error)) { <div class="notice notice-error" role="alert">@error</div> }
+    @if (product == null)
+    {
+        <div class="empty-state"><h1>Product unavailable.</h1><a class="btn btn-primary" href="/products">Shop products</a></div>
+    }
+    else
+    {
+        <div class="product-detail-layout"><div class="detail-image"><img src="@product.ImageLink" alt="@product.Name" onerror="this.onerror=null;this.src='/images/product-placeholder.svg'" /></div><div class="detail-copy"><span class="eyebrow">@product.Brand</span><h1>@product.Name</h1><p class="detail-price">@product.Price.ToString("C2")</p><div class="detail-divider"></div><p class="detail-description">@product.Description</p><button class="btn btn-primary btn-full" disabled="@adding" @onclick="AddToBag">@(adding ? "Adding…" : "Add to bag") <span aria-hidden="true">↗</span></button></div></div>
+    }
+</section>
 
 @code {
+    [Parameter] public int Id { get; set; }
     private Product product;
-
-    [Parameter]
-    public int Id { get; set; }
-
+    private bool adding;
+    private string error;
     protected override void OnParametersSet()
     {
-        base.OnParametersSet();
-
-        if (Id > 0)
-            product = viewProductUseCase.Execute(Id);
-
+        product = null; error = null;
+        if (Id <= 0) return;
+        try { product = ViewProduct.Execute(Id); }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to load product {ProductId}", Id); error = "Couldn't load this product. Try again."; }
     }
-
-    private void AddToCart()
+    private async Task AddToBag()
     {
-        addProductToCartUseCase.Execute(product.ProductId);
-        NavigationManager.NavigateTo("/");
+        if (adding || product == null) return;
+        adding = true;
+        try { await AddProduct.Execute(product.ProductId); Navigation.NavigateTo("/cart"); }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to add product to cart"); error = "Couldn't update your bag. Try again."; }
+        finally { adding = false; }
     }
 }

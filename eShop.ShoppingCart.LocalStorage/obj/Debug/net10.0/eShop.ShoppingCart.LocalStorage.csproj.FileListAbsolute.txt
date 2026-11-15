@@ -20,8 +20,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\scopedcss\bundle\eShop.ShoppingCart.LocalStorage.styles.css
-C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\compressed\o1nhq7ltvw-{0}-yhjgo0gitb-yhjgo0gitb.gz
-C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\compressed\3dfgkj4076-{0}-laf9iglwpr-laf9iglwpr.gz
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\staticwebassets.development.json
@@ -39,3 +37,6 @@ C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\refint\eShop.ShoppingCart.LocalStorage.dll
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\eShop.ShoppingCart.LocalStorage.pdb
 C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\ref\eShop.ShoppingCart.LocalStorage.dll
+C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\compressed\t6pc9s25lg-{0}-31e0mcqib7-31e0mcqib7.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\compressed\o1nhq7ltvw-{0}-j3ej2y8x18-j3ej2y8x18.gz
+C:\Users\Liam\Desktop\BlazorEcom\eShop.ShoppingCart.LocalStorage\obj\Debug\net10.0\compressed\3dfgkj4076-{0}-t7monxu8dx-t7monxu8dx.gz

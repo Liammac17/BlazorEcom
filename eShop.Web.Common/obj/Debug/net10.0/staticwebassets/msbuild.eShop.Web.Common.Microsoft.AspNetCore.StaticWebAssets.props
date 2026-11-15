@@ -17,7 +17,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <FileLength>378</FileLength>
-      <LastWriteTime>Fri, 06 Nov 2026 20:15:26 GMT</LastWriteTime>
+      <LastWriteTime>Sat, 14 Nov 2026 23:44:56 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\background.png'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\jsNavigator.js'))">
@@ -32,12 +32,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>j6sh68bpm0</Fingerprint>
-      <Integrity>6377ZN8T5UBxjuWP43oG7n5TVVqqEmCSIAzTOP+SOIw=</Integrity>
+      <Fingerprint>1a1p2ukibc</Fingerprint>
+      <Integrity>R/Oyo/ZXb9KD99WReulWZqaeAQK8fs7Ro6rrhtCLu4U=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>75</FileLength>
-      <LastWriteTime>Fri, 06 Nov 2026 20:15:26 GMT</LastWriteTime>
+      <FileLength>71</FileLength>
+      <LastWriteTime>Sat, 14 Nov 2026 23:44:56 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\jsNavigator.js'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\styles.css'))">
@@ -52,12 +52,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>laf9iglwpr</Fingerprint>
-      <Integrity>rZf3BJ55O3pmMKt/1ntMD1t+PPePWXxj6lQXYfCu7gI=</Integrity>
+      <Fingerprint>t7monxu8dx</Fingerprint>
+      <Integrity>eQGFiJcydwMRVTLKUgurEB5xHVbPcxrFkseGpzWnck0=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>274</FileLength>
-      <LastWriteTime>Fri, 06 Nov 2026 20:15:27 GMT</LastWriteTime>
+      <FileLength>263</FileLength>
+      <LastWriteTime>Sat, 14 Nov 2026 23:44:56 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\styles.css'))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>

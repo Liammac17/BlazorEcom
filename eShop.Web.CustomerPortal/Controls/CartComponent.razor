@@ -1,34 +1,23 @@
-﻿@implements IDisposable
-@inject IShoppingCartStateStore  shoppingCartStateStore
+@implements IDisposable
+@inject IShoppingCartStateStore CartState
+@inject Microsoft.Extensions.Logging.ILogger<CartComponent> Logger
 
-<div>
-    Cart:&nbsp;@lineItemsCount
-</div>
+<span class="bag-label">Bag</span><span class="cart-count" aria-live="polite" aria-label="@($"{count} items in bag")">@count</span>
 
-
-@code { 
-    private int lineItemsCount = 0;
-    
-
+@code {
+    private int count;
+    private bool disposed;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            shoppingCartStateStore.AddStateChangeListeners(HandleShoppingCartStateChange);
-            lineItemsCount = await shoppingCartStateStore.GetLineItemsCount();
-            StateHasChanged();
-        }
+        if (!firstRender) return;
+        CartState.AddStateChangeListeners(OnCartChanged);
+        await Refresh();
     }
-
-    private async void HandleShoppingCartStateChange()
+    private void OnCartChanged() { _ = Refresh(); }
+    private async Task Refresh()
     {
-        lineItemsCount = await shoppingCartStateStore.GetLineItemsCount();
-        StateHasChanged();
+        try { var next = await CartState.GetLineItemsCount(); if (!disposed) await InvokeAsync(() => { count = next; StateHasChanged(); }); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Unable to refresh bag count"); }
     }
-
-    public void Dispose()
-    {
-        shoppingCartStateStore.RemoveStateChangeListeners(HandleShoppingCartStateChange);
-    }
-
+    public void Dispose() { disposed = true; CartState.RemoveStateChangeListeners(OnCartChanged); }
 }

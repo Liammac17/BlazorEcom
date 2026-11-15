@@ -1,60 +1,41 @@
-﻿@page "/placeorder"
+<PageTitle>Checkout · MyShop</PageTitle>
+@page "/placeorder"
+@inject NavigationManager Navigation
+@inject IViewShoppingCartUseCase ViewCart
+@inject IPlaceOrderUseCase PlaceOrder
+@inject Microsoft.Extensions.Logging.ILogger<PlaceOrderComponent> Logger
 
-@inject NavigationManager NavigationManager
-@inject IViewShoppingCartUseCase viewShoppingCartUseCase
-@inject IPlaceOrderUseCase placeOrderUseCase 
-@inject Microsoft.Extensions.Logging.ILoggerFactory loggerFactory
-
-<MessageComponent @ref="msgComponent"></MessageComponent>
-
-<h3>Placing Order</h3>
-<br />
-
-@if (order != null)
-{
-<div class="row">
-    <div class="col">
-        <CustomerFormComponent OnCustomerInfoSubmitted="HandleCustomerInfoSubmitted"></CustomerFormComponent>
-    </div>
-    <div class="col">
-        <OrderSummaryComponent Order="order" HidePlaceOrderButton="true"></OrderSummaryComponent>
-    </div>
-</div>
-}
-
-
-
+<section class="page-container inner-page"><a class="back-link" href="/cart">← Back to your bag</a><div class="page-heading"><h1>Checkout</h1></div>
+@if (error != null) { <div class="notice notice-error" role="alert">@error</div> }
+@if (loading) { <div class="loading-state" role="status">Loading…</div> }
+else if (order?.LineItems?.Count > 0) { <div class="checkout-layout"><CustomerFormComponent OnCustomerInfoSubmitted="SubmitOrder" IsSubmitting="submitting" /><OrderSummaryComponent Order="order" HidePlaceOrderButton="true" /></div> }
+else { <div class="empty-state"><h2>Your bag is empty.</h2><a class="btn btn-primary" href="/products">Shop products</a></div> }
+</section>
 
 @code {
-
     private Order order;
-
-    private MessageComponent msgComponent;
-
+    private string error;
+    private bool loading = true;
+    private bool submitting;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            order = await viewShoppingCartUseCase.Execute();
-            StateHasChanged();
-        }
+        if (!firstRender) return;
+        try { order = await ViewCart.Execute(); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Unable to prepare checkout"); error = "Couldn't load checkout. Return to your bag and try again."; }
+        finally { loading = false; StateHasChanged(); }
     }
-
-    private async void HandleCustomerInfoSubmitted(CustomerViewModel customer)
+    private async Task SubmitOrder(CustomerViewModel customer)
     {
-        var mapper = new AutoMapper.MapperConfiguration(cfg => cfg.CreateMap<CustomerViewModel, Order>(), loggerFactory).CreateMapper();
-        mapper.Map<CustomerViewModel, Order>(customer, order);
-
-        var orderUniqueId = await placeOrderUseCase.Execute(order);
-        if (string.IsNullOrWhiteSpace(orderUniqueId))
+        if (submitting || order == null) return;
+        submitting = true; error = null;
+        try
         {
-            // error occured, not able to place order, please contact the admin
-            msgComponent.ShowError("Information in the order is invalid, please double check.");
+            order.CustomerName = customer.CustomerName; order.CustomerAddress = customer.CustomerAddress; order.CustomerCity = customer.CustomerCity; order.CustomerStateProvince = customer.CustomerStateProvince; order.CustomerCountry = customer.CustomerCountry;
+            var uniqueId = await PlaceOrder.Execute(order);
+            if (string.IsNullOrWhiteSpace(uniqueId)) error = "Your bag, prices, or address details changed. Review them before ordering.";
+            else Navigation.NavigateTo($"/orderconfirm/{Uri.EscapeDataString(uniqueId)}");
         }
-        else
-        {
-            NavigationManager.NavigateTo($"/orderconfirm/{orderUniqueId}");
-        }
+        catch (Exception ex) { Logger.LogError(ex, "Checkout could not complete"); error = "Couldn't place your order. Try again."; }
+        finally { submitting = false; }
     }
-
 }

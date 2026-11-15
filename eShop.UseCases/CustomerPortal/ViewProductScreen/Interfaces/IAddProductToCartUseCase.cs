@@ -2,6 +2,6 @@
 {
     public interface IAddProductToCartUseCase
     {
-        void Execute(int productId);
+        System.Threading.Tasks.Task Execute(int productId);
     }
 }

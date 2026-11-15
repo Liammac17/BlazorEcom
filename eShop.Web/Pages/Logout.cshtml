@@ -1,0 +1,27 @@
+@page "/logout"
+@model eShop.Web.Pages.LogoutModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Sign out · MyShop</title>
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body class="auth-page">
+    <main class="auth-shell">
+        <a href="/" class="brand-link">MyShop<span aria-hidden="true">.</span></a>
+        <section class="auth-card" aria-labelledby="sign-out-title">
+            <h1 id="sign-out-title">Sign out?</h1>
+            <form method="post" asp-antiforgery="true">
+                <button type="submit" class="btn btn-primary">Sign out</button>
+                <a href="/outstandingorders" class="btn btn-outline">Cancel</a>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
